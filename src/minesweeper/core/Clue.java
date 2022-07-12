@@ -6,7 +6,11 @@ package minesweeper.core;
 public class Clue  extends Tile {
     /** Value of the clue. */
     private final int value;
-    
+
+    public int getValue() {
+        return value;
+    }
+
     /**
      * Constructor.
      * @param value  value of the clue
