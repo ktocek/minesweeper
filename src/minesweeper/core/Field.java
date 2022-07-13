@@ -10,6 +10,7 @@ public class Field {
      * Playing field tiles.
      */
     private final Tile[][] tiles;
+    private final Mine mine = new Mine();
 
     /**
      * Field row count. Rows are indexed from 0 to (rowCount - 1).
@@ -46,6 +47,7 @@ public class Field {
 
         //generate the field content
         generate();
+        printField();
     }
 
     public int getRowCount() {
@@ -62,6 +64,22 @@ public class Field {
 
     public GameState getState() {
         return state;
+    }
+
+    public Tile getTile(int row, int column) {
+
+        return tiles[row][column];
+    }
+
+    public void printField(){
+        for (int row = 0; row < rowCount; row++) {
+            for (int col = 0; col < columnCount; col++) {
+                if (getTile(row, col) instanceof Mine) {
+                    System.out.print("*");
+                } else System.out.print(countAdjacentMines(row, col));
+                System.out.print(' ');
+            }System.out.println();
+        }
     }
 
     /**
@@ -96,11 +114,11 @@ public class Field {
         //throw new UnsupportedOperationException("Method markTile not yet implemented");
         Tile tile = tiles[row][column];
 
-        if (tile.getState() == Tile.State.CLOSED){
+        if (tile.getState() == Tile.State.CLOSED) {
             tile.setState(Tile.State.MARKED);
         }
 
-        if (tile.getState() == Tile.State.MARKED){
+        if (tile.getState() == Tile.State.MARKED) {
             tile.setState(Tile.State.CLOSED);
         }
     }
@@ -111,20 +129,17 @@ public class Field {
     private void generate() {
         //throw new UnsupportedOperationException("Method generate not yet implemented");
         Random r = new Random();
-        Random c = new Random();
         int i = 0;
-        while (i < 10){
-            int row = r.nextInt(rowCount);
-            int col = c.nextInt(columnCount);
-            Mine mine = new Mine();
 
-            if (tiles[row][col] == null){
+        while (i < mineCount) {
+            int row = r.nextInt(rowCount);
+            int col = r.nextInt(columnCount);
+
+            if (getTile(row, col) == null) {
                 tiles[row][col] = mine;
                 i++;
             }
         }
-
-
     }
 
     /**

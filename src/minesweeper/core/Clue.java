@@ -18,4 +18,5 @@ public class Clue  extends Tile {
     public Clue(int value) {
         this.value = value;
     }
+
 }
