@@ -47,7 +47,6 @@ public class Field {
 
         //generate the field content
         generate();
-        printField();
     }
 
     public int getRowCount() {
@@ -69,17 +68,6 @@ public class Field {
     public Tile getTile(int row, int column) {
 
         return tiles[row][column];
-    }
-
-    public void printField(){
-        for (int row = 0; row < rowCount; row++) {
-            for (int col = 0; col < columnCount; col++) {
-                if (getTile(row, col) instanceof Mine) {
-                    System.out.print("*");
-                } else System.out.print(countAdjacentMines(row, col));
-                System.out.print(' ');
-            }System.out.println();
-        }
     }
 
     /**
@@ -158,7 +146,7 @@ public class Field {
      * @param column column number.
      * @return number of adjacent mines.
      */
-    private int countAdjacentMines(int row, int column) {
+    public int countAdjacentMines(int row, int column) {
         int count = 0;
         for (int rowOffset = -1; rowOffset <= 1; rowOffset++) {
             int actRow = row + rowOffset;
