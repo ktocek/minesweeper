@@ -38,9 +38,8 @@ public abstract class Tile {
 
     @Override
     public String toString() {
-        if(field.getTile(field.getRowCount(), field.getColumnCount()) instanceof Mine){
-            return "X";
-        }
-        return "-";
+        if(this.state == State.MARKED) {
+            return "M";
+        } else return "-";
     }
 }

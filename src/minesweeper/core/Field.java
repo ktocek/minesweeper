@@ -80,6 +80,10 @@ public class Field {
         Tile tile = tiles[row][column];
         if (tile.getState() == Tile.State.CLOSED) {
             tile.setState(Tile.State.OPEN);
+            if (tile instanceof Clue) {
+                openAdjacentTiles(row, column);
+            }
+
             if (tile instanceof Mine) {
                 state = GameState.FAILED;
                 return;
@@ -99,21 +103,17 @@ public class Field {
      * @param column column number
      */
     public void markTile(int row, int column) {
-        //throw new UnsupportedOperationException("Method markTile not yet implemented");
-        Tile tile = tiles[row][column];
-
-        if (tile.getState() == Tile.State.CLOSED) {
-            tile.setState(Tile.State.MARKED);
-        }
-
-        if (tile.getState() == Tile.State.MARKED) {
-            tile.setState(Tile.State.CLOSED);
+        if (tiles[row][column].getState() == Tile.State.MARKED) {
+            tiles[row][column].setState(Tile.State.CLOSED);
+        } else {
+            tiles[row][column].setState(Tile.State.MARKED);
         }
     }
 
     /**
      * Generates playing field.
      */
+
     private void generate() {
         //throw new UnsupportedOperationException("Method generate not yet implemented");
         Random r = new Random();
@@ -130,9 +130,8 @@ public class Field {
         }
         for (int row = 0; row < rowCount; row++) {
             for (int col = 0; col < columnCount; col++) {
-                Clue clue = new Clue(countAdjacentMines(row,col));
-                if (getTile(row, col) != mine) {
-                    tiles[row][col] = clue;
+                if (getTile(row, col) == null) {
+                    tiles[row][col] = new Clue(countAdjacentMines(row, col));
                 }
             }
         }
@@ -146,7 +145,21 @@ public class Field {
      * @return true if game is solved, false otherwise
      */
     private boolean isSolved() {
-        throw new UnsupportedOperationException("Method isSolved not yet implemented");
+        return (rowCount * columnCount) - getNumberOf(Tile.State.OPEN) == mineCount;
+    }
+
+    private int getNumberOf(Tile.State state) {
+        int numberOf = 0;
+
+        for (int row = 0; row < rowCount; row++) {
+            for (int col = 0; col < columnCount; col++) {
+                if (getTile(row, col).equals(state)) {
+                    numberOf++;
+                }
+            }
+        }
+
+        return numberOf;
     }
 
     /**
@@ -173,6 +186,23 @@ public class Field {
         }
 
         return count;
+    }
+
+    public void openAdjacentTiles(int row, int column) {
+        for (int rowOffset = -1; rowOffset <= 1; rowOffset++) {
+            int actRow = row + rowOffset;
+            if (actRow >= 0 && actRow < rowCount) {
+                for (int columnOffset = -1; columnOffset <= 1; columnOffset++) {
+                    int actColumn = column + columnOffset;
+                    if (actColumn >= 0 && actColumn < columnCount) {
+                        if (countAdjacentMines(actRow,actColumn) == 0 && countAdjacentMines(row,column) == 0) {
+                                openTile(actRow, actColumn);
+
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }
