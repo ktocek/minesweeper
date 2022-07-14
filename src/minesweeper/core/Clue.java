@@ -19,4 +19,8 @@ public class Clue  extends Tile {
         this.value = value;
     }
 
+    @Override
+    public String toString() {
+        return String.valueOf(value);
+    }
 }

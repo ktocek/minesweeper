@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import minesweeper.UserInterface;
 import minesweeper.core.Field;
 import minesweeper.core.Mine;
+import minesweeper.core.Tile;
 
 /**
  * Console user interface.
@@ -16,6 +17,7 @@ public class ConsoleUI implements UserInterface {
      * Playing field.
      */
     private Field field;
+    private Tile tile;
 
     /**
      * Input reader.
@@ -55,28 +57,17 @@ public class ConsoleUI implements UserInterface {
      */
     @Override
     public void update() {
-        int colOrder = 0;
-        char rowOrder = 65;
         //throw new UnsupportedOperationException("Method update not yet implemented");
-        for (int row = 0; row < field.getRowCount(); row++) {
-            for (int col = 0; col < field.getColumnCount(); col++) {
+        System.out.print("   ");
+        for (int c = 0; c < field.getColumnCount(); c++) {
+            System.out.printf("%3s", c);
+        }
+        System.out.println();
 
-                if (row == 0 && col == 0) {
-                    System.out.print("  ");
-                } else if (row == 0) {
-                    System.out.print(colOrder);
-                    System.out.print(' ');
-                    colOrder++;
-                } else if (col == 0) {
-                    System.out.print(rowOrder);
-                    System.out.print(' ');
-                    rowOrder++;
-                } else {
-                    if (field.getTile(row, col) instanceof Mine) {
-                        System.out.print("*");
-                    } else System.out.print(field.countAdjacentMines(row, col));
-                    System.out.print(' ');
-                }
+        for (int row = 0; row < field.getRowCount(); row++) {
+            System.out.printf("%3c", ((char) row + 65));
+            for (int col = 0; col < field.getColumnCount(); col++) {
+                System.out.printf("%3s", field.getTile(row, col));
             }
             System.out.println();
         }

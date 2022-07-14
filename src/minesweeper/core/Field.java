@@ -66,7 +66,6 @@ public class Field {
     }
 
     public Tile getTile(int row, int column) {
-
         return tiles[row][column];
     }
 
@@ -77,6 +76,7 @@ public class Field {
      * @param column column number
      */
     public void openTile(int row, int column) {
+
         Tile tile = tiles[row][column];
         if (tile.getState() == Tile.State.CLOSED) {
             tile.setState(Tile.State.OPEN);
@@ -128,6 +128,16 @@ public class Field {
                 i++;
             }
         }
+        for (int row = 0; row < rowCount; row++) {
+            for (int col = 0; col < columnCount; col++) {
+                Clue clue = new Clue(countAdjacentMines(row,col));
+                if (getTile(row, col) != mine) {
+                    tiles[row][col] = clue;
+                }
+            }
+        }
+
+
     }
 
     /**
@@ -164,4 +174,5 @@ public class Field {
 
         return count;
     }
+
 }

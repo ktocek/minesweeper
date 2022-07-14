@@ -4,6 +4,8 @@ package minesweeper.core;
  * Tile of a field.
  */
 public abstract class Tile {
+
+    private Field field;
     
     /** Tile states. */
     public enum State {
@@ -32,5 +34,13 @@ public abstract class Tile {
      */
     void setState(State state) {
         this.state = state;
+    }
+
+    @Override
+    public String toString() {
+        if(field.getTile(field.getRowCount(), field.getColumnCount()) instanceof Mine){
+            return "X";
+        }
+        return "-";
     }
 }
