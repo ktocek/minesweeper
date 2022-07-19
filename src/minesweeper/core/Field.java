@@ -1,5 +1,7 @@
 package minesweeper.core;
 
+import minesweeper.Minesweeper;
+
 import java.util.Random;
 
 /**
@@ -80,8 +82,12 @@ public class Field {
         Tile tile = tiles[row][column];
         if (tile.getState() == Tile.State.CLOSED) {
             tile.setState(Tile.State.OPEN);
+
             if (tile instanceof Clue) {
-                openAdjacentTiles(row, column);
+                Clue c = (Clue)tile;
+                if(c.getValue() == 0) {
+                    openAdjacentTiles(row, column);
+                }
             }
 
             if (tile instanceof Mine) {
@@ -153,7 +159,7 @@ public class Field {
 
         for (int row = 0; row < rowCount; row++) {
             for (int col = 0; col < columnCount; col++) {
-                if (getTile(row, col).equals(state)) {
+                if (tiles[row][col].getState() == state) {
                     numberOf++;
                 }
             }
@@ -195,10 +201,7 @@ public class Field {
                 for (int columnOffset = -1; columnOffset <= 1; columnOffset++) {
                     int actColumn = column + columnOffset;
                     if (actColumn >= 0 && actColumn < columnCount) {
-                        if (countAdjacentMines(actRow,actColumn) == 0 && countAdjacentMines(row,column) == 0) {
                                 openTile(actRow, actColumn);
-
-                        }
                     }
                 }
             }

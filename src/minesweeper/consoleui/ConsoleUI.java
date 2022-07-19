@@ -6,11 +6,8 @@ import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import minesweeper.UserInterface;
 import minesweeper.core.Field;
 import minesweeper.core.GameState;
-import minesweeper.core.Mine;
-import minesweeper.core.Tile;
 
 /**
  * Console user interface.
@@ -22,6 +19,8 @@ public class ConsoleUI implements UserInterface {
     private Field field;
 
     private String format = "%2s";
+
+    private static final Pattern PATTERN = Pattern.compile("(X|x)|((M|O|m|o)([A-Za-z])(\\d*))");
 
     /**
      * Input reader.
@@ -96,26 +95,34 @@ public class ConsoleUI implements UserInterface {
      */
     private void processInput() {
         //throw new UnsupportedOperationException("Method processInput not yet implemented");
-        final String regex = "(X|x)|((M|O|m|o)([A-Za-z])(\\d*))";
         String line = readLine();
-        System.out.println(line);
 
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(line);
+        try {
+            handleInput(line);
+        }catch(WrongFormatException ex){
+            System.out.println(ex.getMessage());
+        }
 
+
+    }
+
+    void handleInput(String input) throws WrongFormatException{
+
+        Matcher matcher = PATTERN.matcher(input);
 
         if (matcher.matches()) {
+
+            if (matcher.group(1) != null) {
+                System.exit(0);
+            }
 
             char c = matcher.group(4).toUpperCase().charAt(0);
             int row = ((int) c) - 65;
             int col = Integer.parseInt(matcher.group(5));
 
             if (row >= field.getRowCount() || col >= field.getColumnCount()) {
-                System.out.println("Bad input!");
+                throw new WrongFormatException("Bad input!");
             } else {
-                if (matcher.group(1) != null) {
-                    System.exit(0);
-                }
                 if (matcher.group(3).toLowerCase().equals("m")) {
                     field.markTile(row, col);
                 }
@@ -123,6 +130,6 @@ public class ConsoleUI implements UserInterface {
                     field.openTile(row, col);
                 }
             }
-        } else System.out.println("Bad input!");
+        } else throw new WrongFormatException("Bad input!");
     }
 }
