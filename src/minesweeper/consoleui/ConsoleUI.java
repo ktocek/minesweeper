@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import minesweeper.Minesweeper;
 import minesweeper.core.Field;
 import minesweeper.core.GameState;
 
@@ -57,6 +58,7 @@ public class ConsoleUI implements UserInterface {
             processInput();
             if (field.getState() == GameState.SOLVED) {
                 System.out.println("YOU WON!!");
+                System.out.println(Minesweeper.getInstance().getBestTimes());
                 System.exit(0);
             }
             if (field.getState() == GameState.FAILED) {
@@ -72,6 +74,7 @@ public class ConsoleUI implements UserInterface {
     @Override
     public void update() {
         //throw new UnsupportedOperationException("Method update not yet implemented");
+        System.out.println(Minesweeper.getInstance().getPlayingSeconds());
         System.out.printf(format, "");
         for (int c = 0; c < field.getColumnCount(); c++) {
             System.out.printf(format, c);

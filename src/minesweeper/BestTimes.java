@@ -1,9 +1,6 @@
 package minesweeper;
 
-import java.util.ArrayList;
-import java.util.Formatter;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Player times.
@@ -11,7 +8,6 @@ import java.util.List;
 public class BestTimes implements Iterable<BestTimes.PlayerTime> {
     /** List of best player times. */
 
-    PlayerTime playerTime;
     private List<PlayerTime> playerTimes = new ArrayList<PlayerTime>();
 
     /**
@@ -28,8 +24,8 @@ public class BestTimes implements Iterable<BestTimes.PlayerTime> {
      * @param time player time in seconds
      */
     public void addPlayerTime(String name, int time) {
-        PlayerTime playerTime = new PlayerTime(name, time);
-        playerTimes.add(playerTime);
+        playerTimes.add(new PlayerTime(name, time));
+        Collections.sort(playerTimes);
     }
 
     /**
@@ -38,7 +34,8 @@ public class BestTimes implements Iterable<BestTimes.PlayerTime> {
      */
     public String toString() {
         Formatter f = new Formatter();
-        f.format(playerTime.getName() + "%02d", playerTime.getTime());
+        for(PlayerTime pt : playerTimes)
+        f.format(pt.getName() + "%02d", pt.getTime());
         return f.toString();
     }
 

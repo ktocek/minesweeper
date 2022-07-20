@@ -133,6 +133,7 @@ public class Field {
                 tiles[row][col] = mine;
                 i++;
             }
+
         }
         for (int row = 0; row < rowCount; row++) {
             for (int col = 0; col < columnCount; col++) {
