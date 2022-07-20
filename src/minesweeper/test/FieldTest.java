@@ -31,10 +31,10 @@ public class FieldTest {
     }
 
     @Test
-    public void checkFieldInitialization(){
-        assertEquals(rowCount,field.getColumnCount(),"Row count was initialized incorrectly");
-        assertEquals(columnCount,field.getColumnCount(),"Column count was initialized incorrectly");
-        assertEquals(minesCount, field.getMineCount(),"Mine count was initialized incorrectly");
+    public void checkFieldInitialization() {
+        assertEquals(rowCount, field.getColumnCount(), "Row count was initialized incorrectly");
+        assertEquals(columnCount, field.getColumnCount(), "Column count was initialized incorrectly");
+        assertEquals(minesCount, field.getMineCount(), "Mine count was initialized incorrectly");
         assertEquals(field.getState(), GameState.PLAYING, "Game state is not PLAYING");
     }
 
@@ -42,18 +42,20 @@ public class FieldTest {
     public void checkMarkTile() {
         int row = randomGenerator.nextInt(rowCount);
         int col = randomGenerator.nextInt(columnCount);
-        field.markTile(row,col);
-        assertEquals(Tile.State.MARKED,field.getTile(row,col).getState(),"Tile is not marked");
-        field.markTile(row,col);
-        assertEquals(Tile.State.CLOSED,field.getTile(row,col).getState(),"Tile is not marked");
+        field.markTile(row, col);
+        assertEquals(Tile.State.MARKED, field.getTile(row, col).getState(), "Tile is not marked");
+        field.markTile(row, col);
+        assertEquals(Tile.State.CLOSED, field.getTile(row, col).getState(), "Tile is not marked");
     }
 
     @Test
     public void checkOpenMine() {
-        for (int r = 0; r < rowCount; r++) {
-            for (int c = 0; c < columnCount; c++) {
-                if (field.getTile(r,c) instanceof Mine){
-
+        for (int row = 0; row < rowCount; row++) {
+            for (int col = 0; col < columnCount; col++) {
+                if (field.getTile(row, col) instanceof Mine) {
+                    field.openTile(row, col);
+                    assertEquals(Tile.State.OPEN, field.getTile(row, col).getState(), "Tile is not Open");
+                    assertEquals(field.getState(), GameState.FAILED, "Game is not FAILED");
                 }
             }
         }
