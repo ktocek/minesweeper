@@ -14,6 +14,12 @@ public class Minesweeper {
 
     private long startMillis;
 
+    private BestTimes bestTimes;
+
+    public BestTimes getBestTimes() {
+        return bestTimes;
+    }
+
     public int getPlayingSeconds() {
         return (int) TimeUnit.MILLISECONDS.toSeconds(startMillis - System.currentTimeMillis());
     }
@@ -25,7 +31,7 @@ public class Minesweeper {
         userInterface = new ConsoleUI();
         System.out.println("Hello " + System.getProperty("user.name"));
         startMillis = System.currentTimeMillis();
-        System.out.println(getPlayingSeconds());
+        System.out.println(startMillis);
         Field field = new Field(10, 10, 10);
         userInterface.newGameStarted(field);
 
