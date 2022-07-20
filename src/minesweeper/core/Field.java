@@ -42,13 +42,17 @@ public class Field {
      * @param mineCount   mine count
      */
     public Field(int rowCount, int columnCount, int mineCount) {
-        this.rowCount = rowCount;
-        this.columnCount = columnCount;
-        this.mineCount = mineCount;
-        tiles = new Tile[rowCount][columnCount];
+        if (mineCount > rowCount * columnCount){
+            throw new ArithmeticException("To many mines");
+        }else {
+            this.rowCount = rowCount;
+            this.columnCount = columnCount;
+            this.mineCount = mineCount;
+            tiles = new Tile[rowCount][columnCount];
 
-        //generate the field content
-        generate();
+            //generate the field content
+            generate();
+        }
     }
 
     public int getRowCount() {

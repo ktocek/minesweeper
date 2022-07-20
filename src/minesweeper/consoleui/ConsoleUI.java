@@ -49,7 +49,6 @@ public class ConsoleUI implements UserInterface {
     @Override
     public void newGameStarted(Field field) {
         this.field = field;
-
         this.format = "%"
                 + (1 + String.valueOf(field.getColumnCount()).length())
                 + "s";
@@ -58,6 +57,7 @@ public class ConsoleUI implements UserInterface {
             processInput();
             if (field.getState() == GameState.SOLVED) {
                 System.out.println("YOU WON!!");
+
                 System.out.println(Minesweeper.getInstance().getBestTimes());
                 System.exit(0);
             }

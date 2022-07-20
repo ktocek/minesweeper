@@ -4,6 +4,9 @@ import minesweeper.consoleui.ConsoleUI;
 import minesweeper.core.Field;
 import minesweeper.core.GameState;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -11,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Minesweeper {
     /** User interface. */
-
+    private BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
     private static Minesweeper instance;
 
     public static Minesweeper getInstance(){
@@ -35,20 +38,29 @@ public class Minesweeper {
         return (int) TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startMillis);
     }
 
+    private String readLine() {
+        try {
+            return input.readLine();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
     /**
      * Constructor.
      */
     private Minesweeper() {
         instance = this;
-        bestTimes.addPlayerTime("Tino",7);
-
         userInterface = new ConsoleUI();
-        System.out.println("Hello " + System.getProperty("user.name"));
+        System.out.println("Hello enter your name: ");
+        String name = readLine();
+        bestTimes.addPlayerTime(name,7);
         startMillis = System.currentTimeMillis();
-        Field field = new Field(10, 10, 10);
+        Field field = new Field(10, 10, 1);
         userInterface.newGameStarted(field);
 
     }
+
 
     /**
      * Main method.
