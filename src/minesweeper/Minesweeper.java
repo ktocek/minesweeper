@@ -13,12 +13,24 @@ import java.util.concurrent.TimeUnit;
  * Main application class.
  */
 public class Minesweeper {
-    /** User interface. */
+    /**
+     * User interface.
+     */
     private BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
     private static Minesweeper instance;
 
-    public static Minesweeper getInstance(){
-        if (instance == null){
+    private Settings setting;
+
+    public Settings getSetting() {
+        return setting;
+    }
+
+    public void setSetting(Settings setting) {
+        this.setting = setting;
+    }
+
+    public static Minesweeper getInstance() {
+        if (instance == null) {
             new Minesweeper();
         }
         return instance;
@@ -54,9 +66,14 @@ public class Minesweeper {
         userInterface = new ConsoleUI();
         System.out.println("Hello enter your name: ");
         String name = readLine();
-        bestTimes.addPlayerTime(name,7);
+        setting = Settings.load();
+        bestTimes.addPlayerTime(name, getPlayingSeconds());
         startMillis = System.currentTimeMillis();
-        Field field = new Field(10, 10, 1);
+        Field field = new Field(
+                setting.getRowCount(),
+                setting.getColumnCount(),
+                setting.getMineCount()
+        );
         userInterface.newGameStarted(field);
 
     }
@@ -64,6 +81,7 @@ public class Minesweeper {
 
     /**
      * Main method.
+     *
      * @param args arguments
      */
     public static void main(String[] args) {

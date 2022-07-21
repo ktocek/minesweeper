@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import minesweeper.Minesweeper;
+import minesweeper.Settings;
 import minesweeper.core.Field;
 import minesweeper.core.GameState;
 
@@ -52,6 +53,23 @@ public class ConsoleUI implements UserInterface {
         this.format = "%"
                 + (1 + String.valueOf(field.getColumnCount()).length())
                 + "s";
+        System.out.println("Enter game difficulty:");
+        System.out.println("(1) BEGINNER, (2) INTERMEDIATE, (3) EXPERT, (ENTER) DEFAULT");
+        String level = readLine();
+        if(level != null && !level.equals("")) {
+            try {
+                int intLevel = Integer.parseInt(level);
+                Settings s = switch (intLevel) {
+                    case 2 -> Settings.INTERMEDIATE;
+                    case 3 -> Settings.EXPERT;
+                    default -> Settings.BEGINNER;
+                };
+                Minesweeper.getInstance().setSetting(s);
+                this.field = new Field(s.getRowCount(), s.getColumnCount(), s.getMineCount());
+            } catch (NumberFormatException e) {
+                //empty naschval
+            }
+        }
         do {
             update();
             processInput();

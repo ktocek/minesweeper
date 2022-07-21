@@ -28,11 +28,72 @@ public class FieldTest {
     }
 
     @Test
+    public void checkOpenClue() {
+        int ranRow = randomGenerator.nextInt(rowCount);
+        int ranCol = randomGenerator.nextInt(columnCount);
+        int random = 0;
+        boolean clueIsOpen = true;
+        int countOfOpen = 0;
+
+        //Najst si v poli dlazdicu s hodnotou inou ako 0, otvorit a testnut, ci otvorilo len jednu dlazdicu a ci stav pola zostava nadalej PLAYING
+
+        for (int row = 0; row < rowCount; row++) {
+            for (int col = 0; col < columnCount; col++) {
+                if (field.countAdjacentMines(row, col) == 0 && !(field.getTile(row, col) instanceof Mine)) {
+                    field.openTile(row, col);
+                    assertEquals(field.getState(), GameState.PLAYING, "GameState is not PLAYING");
+                    for (int r = 0; r < rowCount; r++) {
+                        for (int c = 0; c < columnCount; c++) {
+                            if(field.getTile(r, c).getState() == Tile.State.OPEN){
+                                countOfOpen++;
+                            }
+                        }
+                    }
+                    assertEquals(1,countOfOpen,"There is more than one open tile!");
+                    break;
+                }
+            }
+        }
+
+        //Najst si v poli dlazdicu s hodnotou 0, otvorit a checknut, ci su otvorene len dlazdice typu Clue a ci stav pola zostava nadalej PLAYING
+
+        for (int row = 0; row < rowCount; row++) {
+            for (int col = 0; col < columnCount; col++) {
+                if(field.countAdjacentMines(row, col) == 0 && !(field.getTile(row, col) instanceof Mine)){
+                    field.openTile(row, col);
+                    assertEquals(field.getState(), GameState.PLAYING, "GameState is not PLAYING");
+                    for (int r = 0; r < rowCount; r++) {
+                        for (int c = 0; c < columnCount; c++) {
+                            if(field.getTile(r, c).getState() == Tile.State.OPEN && !(field.getTile(r, c) instanceof Clue)){
+                                assertTrue(clueIsOpen = false, "Not only clue is OPEN");
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //Marknut si akukolvek neotvorenu dlazdicu a skusit si na nej open, ci ostava marknuta
+
+        while (random == 0) {
+            if (field.getTile(ranRow, ranCol).getState() == Tile.State.CLOSED) {
+                field.markTile(ranRow, ranCol);
+                field.openTile(ranRow, ranCol);
+                assertEquals(Tile.State.MARKED, field.getTile(ranRow, ranCol).getState(), "Tile is not marked");
+                random++;
+            }
+        }
+
+    }
+
+    @Test
     public void checkFieldInitialization() {
         assertEquals(rowCount, field.getColumnCount(), "Row count was initialized incorrectly");
         assertEquals(columnCount, field.getColumnCount(), "Column count was initialized incorrectly");
         assertEquals(minesCount, field.getMineCount(), "Mine count was initialized incorrectly");
         assertEquals(field.getState(), GameState.PLAYING, "Game state is not PLAYING");
+
     }
 
     @Test
@@ -57,52 +118,6 @@ public class FieldTest {
             }
         }
     }
-
-    @Test
-    public void checkOpenClue() {
-        int ranRow = randomGenerator.nextInt(rowCount);
-        int ranCol = randomGenerator.nextInt(columnCount);
-        int random = 0;
-        boolean clueIsOpen = true;
-
-        for (int row = 0; row < rowCount; row++) {
-            for (int col = 0; col < columnCount; col++) {
-                if (field.countAdjacentMines(row, col) != 0 && !(field.getTile(row, col) instanceof Mine)) {
-                    field.openTile(row, col);
-                    assertEquals(field.getState(), GameState.PLAYING, "GameState is not PLAYING");
-                    break;
-                }
-            }
-        }
-
-        for (int row = 0; row < rowCount; row++) {
-            for (int col = 0; col < columnCount; col++) {
-                if(field.countAdjacentMines(row, col) == 0 && !(field.getTile(row, col) instanceof Mine)){
-                    field.openTile(row, col);
-                    assertEquals(field.getState(), GameState.PLAYING, "GameState is not PLAYING");
-                    for (int r = 0; r < rowCount; r++) {
-                        for (int c = 0; c < columnCount; c++) {
-                            if(field.getTile(r, c).getState() == Tile.State.OPEN && !(field.getTile(r, c) instanceof Clue)){
-                                assertTrue(clueIsOpen = false, "Not only clue is OPEN");
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        while (random == 0) {
-            if (field.getTile(ranRow, ranCol).getState() == Tile.State.CLOSED) {
-                field.markTile(ranRow, ranCol);
-                field.openTile(ranRow, ranCol);
-                assertEquals(Tile.State.MARKED, field.getTile(ranRow, ranCol).getState(), "Tile is not marked");
-                random++;
-            }
-        }
-    }
-
-
     @Test
     public void checkMinesCount() {
         int minesCounter = 0;
