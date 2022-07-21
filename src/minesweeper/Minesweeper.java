@@ -54,7 +54,7 @@ public class Minesweeper {
         userInterface = new ConsoleUI();
         System.out.println("Hello enter your name: ");
         String name = readLine();
-        bestTimes.addPlayerTime(name,7);
+        bestTimes.addPlayerTime(name,getPlayingSeconds());
         startMillis = System.currentTimeMillis();
         Field field = new Field(10, 10, 1);
         userInterface.newGameStarted(field);
