@@ -7,9 +7,10 @@ public class Settings implements Serializable {
     private final int columnCount;
     private final int mineCount;
 
-    public static final Settings BEGINNER = new Settings(9, 9, 10);
-    public static final Settings INTERMEDIATE = new Settings(16, 16, 40);
-    public static final Settings EXPERT = new Settings(16, 30, 99);
+    public static Settings BEGINNER = new Settings(9, 9, 10);
+    public static Settings INTERMEDIATE = new Settings(16, 16, 40);
+    public static Settings EXPERT = new Settings(16, 30, 99);
+
     private static final String SETTING_FILE = System.getProperty("user.home") + System.getProperty("file.separator") + "minesweeper.settings";
 
     public Settings(int rowCount, int columnCount, int mineCount) {
@@ -49,7 +50,7 @@ public class Settings implements Serializable {
                 new FileOutputStream(SETTING_FILE))) {
             oos.writeObject(this);
         } catch (IOException e) {
-            System.out.println("Nepodarilo sa zapisat settings do objektu");
+           System.out.println("Failed to write settings to the object.");
         }
     }
 
@@ -59,9 +60,9 @@ public class Settings implements Serializable {
             Settings s = (Settings) ois.readObject();
             return s;
         } catch (IOException e) {
-            System.out.println("Nepodarilo sa otvorit settings subor.");
+            System.out.println("Failed to open settings file.");
         } catch (ClassNotFoundException e) {
-            System.out.println("Nepodarilo sa precitat settings.");
+            System.out.println("Failed to quote settings.");
         }
         return BEGINNER;
     }

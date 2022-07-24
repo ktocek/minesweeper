@@ -120,6 +120,10 @@ public class Field {
         }
     }
 
+    public int getRemainingMineCount() {
+        return getMineCount() - this.getNumberOf(Tile.State.MARKED);
+    }
+
     /**
      * Generates playing field.
      */

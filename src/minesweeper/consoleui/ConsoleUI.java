@@ -20,8 +20,6 @@ public class ConsoleUI implements UserInterface {
      */
     private Field field;
 
-    private String format = "%2s";
-
     private static final Pattern PATTERN = Pattern.compile("(X|x)|((M|O|m|o)([A-Za-z])(\\d*))");
 
     /**
@@ -50,13 +48,10 @@ public class ConsoleUI implements UserInterface {
     @Override
     public void newGameStarted(Field field) {
         this.field = field;
-        this.format = "%"
-                + (1 + String.valueOf(field.getColumnCount()).length())
-                + "s";
         System.out.println("Enter game difficulty:");
         System.out.println("(1) BEGINNER, (2) INTERMEDIATE, (3) EXPERT, (ENTER) DEFAULT");
         String level = readLine();
-        if(level != null && !level.equals("")) {
+        if (level != null && !level.equals("")) {
             try {
                 int intLevel = Integer.parseInt(level);
                 Settings s = switch (intLevel) {
@@ -67,7 +62,7 @@ public class ConsoleUI implements UserInterface {
                 Minesweeper.getInstance().setSetting(s);
                 this.field = new Field(s.getRowCount(), s.getColumnCount(), s.getMineCount());
             } catch (NumberFormatException e) {
-                //empty naschval
+                //empty
             }
         }
         do {
@@ -91,18 +86,20 @@ public class ConsoleUI implements UserInterface {
      */
     @Override
     public void update() {
-        //throw new UnsupportedOperationException("Method update not yet implemented");
-        System.out.println(Minesweeper.getInstance().getPlayingSeconds());
-        System.out.printf(format, "");
+//        System.out.printf("Cas hrania: %d%n",
+//                Minesweeper.getInstance().getPlayingSeconds()
+//        );
+        System.out.printf("The number of fields not marked as mine is %s (Number of mines: %s)%n", field.getRemainingMineCount(), field.getMineCount());
+        System.out.printf("%3s", "");
         for (int c = 0; c < field.getColumnCount(); c++) {
-            System.out.printf(format, c);
+            System.out.printf("%3s", c);
         }
         System.out.println();
 
         for (int row = 0; row < field.getRowCount(); row++) {
-            System.out.printf(format, (char) (row + 65));
+            System.out.printf("%3s", (char) (row + 65));
             for (int col = 0; col < field.getColumnCount(); col++) {
-                System.out.printf(format, field.getTile(row, col));
+                System.out.printf("%3s", field.getTile(row, col));
             }
             System.out.println();
         }
@@ -120,14 +117,14 @@ public class ConsoleUI implements UserInterface {
 
         try {
             handleInput(line);
-        }catch(WrongFormatException ex){
+        } catch (WrongFormatException ex) {
             System.out.println(ex.getMessage());
         }
 
 
     }
 
-    void handleInput(String input) throws WrongFormatException{
+    void handleInput(String input) throws WrongFormatException {
 
         Matcher matcher = PATTERN.matcher(input);
 

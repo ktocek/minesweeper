@@ -21,13 +21,6 @@ public class Minesweeper {
 
     private Settings setting;
 
-    public Settings getSetting() {
-        return setting;
-    }
-
-    public void setSetting(Settings setting) {
-        this.setting = setting;
-    }
 
     public static Minesweeper getInstance() {
         if (instance == null) {
@@ -50,6 +43,15 @@ public class Minesweeper {
         return (int) TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startMillis);
     }
 
+    public void setSetting(Settings setting) {
+        this.setting = setting;
+        this.setting.save();
+    }
+
+    public Settings getSetting() {
+        return this.setting;
+    }
+
     private String readLine() {
         try {
             return input.readLine();
@@ -67,8 +69,10 @@ public class Minesweeper {
         System.out.println("Hello enter your name: ");
         String name = readLine();
         setting = Settings.load();
+        setSetting(setting);
         bestTimes.addPlayerTime(name, getPlayingSeconds());
         startMillis = System.currentTimeMillis();
+
         Field field = new Field(
                 setting.getRowCount(),
                 setting.getColumnCount(),
