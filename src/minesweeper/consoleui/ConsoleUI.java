@@ -10,6 +10,8 @@ import minesweeper.Minesweeper;
 import minesweeper.Settings;
 import minesweeper.core.Field;
 import minesweeper.core.GameState;
+import service.ScoreService;
+import service.ScoreServiceJDBC;
 
 /**
  * Console user interface.
@@ -20,12 +22,16 @@ public class ConsoleUI implements UserInterface {
      */
     private Field field;
 
+    private ScoreService service = new ScoreServiceJDBC();
+
     private static final Pattern PATTERN = Pattern.compile("(X|x)|((M|O|m|o)([A-Za-z])(\\d*))");
 
     /**
      * Input reader.
      */
     private BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+
+    private String userName ="";
 
     /**
      * Reads line of text from the reader.
@@ -47,7 +53,10 @@ public class ConsoleUI implements UserInterface {
      */
     @Override
     public void newGameStarted(Field field) {
+        int gameScore=0;
         this.field = field;
+        System.out.println("Zadaj svoje meno:");
+        userName = readLine();
         System.out.println("Enter game difficulty:");
         System.out.println("(1) BEGINNER, (2) INTERMEDIATE, (3) EXPERT, (ENTER) DEFAULT");
         String level = readLine();
@@ -68,15 +77,21 @@ public class ConsoleUI implements UserInterface {
         do {
             update();
             processInput();
-            if (field.getState() == GameState.SOLVED) {
-                System.out.println("YOU WON!!");
 
-                System.out.println(Minesweeper.getInstance().getBestTimes());
-                System.exit(0);
+            var fieldState=this.field.getState();
+
+            if (fieldState == GameState.FAILED) {
+                System.out.println(userName+", you lose. Your score is "+gameScore+".");
+                var scores = service.getBestScores("minesweeper");
+                System.out.println(scores);
+                break;
             }
-            if (field.getState() == GameState.FAILED) {
-                System.out.println("YOU LOSE!!");
-                System.exit(0);
+            if (fieldState == GameState.SOLVED) {
+                gameScore=this.field.getScore();
+                System.out.println(userName+", you win. Your score is "+gameScore+".");
+                var scores = service.getBestScores("minesweeper");
+                System.out.println(scores);
+                break;
             }
         } while (true);
     }
@@ -86,9 +101,9 @@ public class ConsoleUI implements UserInterface {
      */
     @Override
     public void update() {
-//        System.out.printf("Cas hrania: %d%n",
-//                Minesweeper.getInstance().getPlayingSeconds()
-//        );
+        System.out.printf("Time: %d%n",
+                field.getPlayTimeInSeconds()
+        );
         System.out.printf("The number of fields not marked as mine is %s (Number of mines: %s)%n", field.getRemainingMineCount(), field.getMineCount());
         System.out.printf("%3s", "");
         for (int c = 0; c < field.getColumnCount(); c++) {
