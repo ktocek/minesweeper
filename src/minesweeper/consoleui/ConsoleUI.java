@@ -3,13 +3,18 @@ package minesweeper.consoleui;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import entity.Comment;
+import entity.Score;
 import minesweeper.Minesweeper;
 import minesweeper.Settings;
 import minesweeper.core.Field;
 import minesweeper.core.GameState;
+import service.CommentService;
+import service.CommentServiceJDBC;
 import service.ScoreService;
 import service.ScoreServiceJDBC;
 
@@ -22,7 +27,12 @@ public class ConsoleUI implements UserInterface {
      */
     private Field field;
 
+    private String comment;
+    private int gameScore = 0;
+
     private ScoreService service = new ScoreServiceJDBC();
+
+    private CommentService commentService = new CommentServiceJDBC();
 
     private static final Pattern PATTERN = Pattern.compile("(X|x)|((M|O|m|o)([A-Za-z])(\\d*))");
 
@@ -31,7 +41,7 @@ public class ConsoleUI implements UserInterface {
      */
     private BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 
-    private String userName ="";
+    private String userName = "";
 
     /**
      * Reads line of text from the reader.
@@ -53,7 +63,6 @@ public class ConsoleUI implements UserInterface {
      */
     @Override
     public void newGameStarted(Field field) {
-        int gameScore=0;
         this.field = field;
         System.out.println("Zadaj svoje meno:");
         userName = readLine();
@@ -78,22 +87,32 @@ public class ConsoleUI implements UserInterface {
             update();
             processInput();
 
-            var fieldState=this.field.getState();
+            var fieldState = this.field.getState();
 
             if (fieldState == GameState.FAILED) {
-                System.out.println(userName+", you lose. Your score is "+gameScore+".");
-                var scores = service.getBestScores("minesweeper");
-                System.out.println(scores);
+                System.out.println(userName + ", you lose. Your score is " + gameScore + ".");
+                scoreComment();
                 break;
             }
             if (fieldState == GameState.SOLVED) {
-                gameScore=this.field.getScore();
-                System.out.println(userName+", you win. Your score is "+gameScore+".");
-                var scores = service.getBestScores("minesweeper");
-                System.out.println(scores);
+                gameScore = this.field.getScore();
+                System.out.println(userName + ", you win. Your score is " + gameScore + ".");
+                scoreComment();
                 break;
             }
         } while (true);
+    }
+
+    private void scoreComment(){
+        service.addScore(new Score("minesweeper", userName, gameScore, new Date()));
+        var scores = service.getBestScores("minesweeper");
+        System.out.println(scores);
+        System.out.println("Comment:");
+        comment = readLine();
+        commentService.addComment(new Comment("minesweeper",userName,comment,new Date()));
+        System.out.println("Coments:");
+        var comments = commentService.getComments("minesweeper");
+        System.out.println(comments);
     }
 
     /**

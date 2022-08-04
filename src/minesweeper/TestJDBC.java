@@ -1,9 +1,11 @@
 package minesweeper;
 
 import entity.Score;
+import entity.Comment;
 import service.ScoreService;
 import service.ScoreServiceJDBC;
-
+import service.CommentService;
+import service.CommentServiceJDBC;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Date;
@@ -11,13 +13,18 @@ import java.util.Date;
 public class TestJDBC {
 
     public static void main(String[] args) {
-        ScoreService service = new ScoreServiceJDBC();
+//        ScoreService service = new ScoreServiceJDBC();
+        CommentService commentService = new CommentServiceJDBC();
 //        service.reset();
 
-        service.addScore(new Score("minesweeper","Kiko", 456, new Date()));
+//        service.addScore(new Score("minesweeper","Kiko", 456, new Date()));
+//
+//        var scores = service.getBestScores("minesweeper");
+//        System.out.println(scores);
 
-        var scores = service.getBestScores("minesweeper");
-        System.out.println(scores);
+        commentService.addComment(new Comment("minesweeper","Kristian","Dobra hra.", new Date()));
+        var comments = commentService.getComments("minesweeper");
+        System.out.println(comments);
     }
 
 //    public static void main(String[] args) throws Exception {

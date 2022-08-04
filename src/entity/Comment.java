@@ -3,16 +3,16 @@ package entity;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Score implements Serializable {
+public class Comment implements Serializable {
     private String game;
     private String username;
-    private int points;
+    private String comment;
     private Date playedOn;
 
-    public Score(String game, String username, int points, Date playedOn) {
+    public Comment(String game, String username, String comment, Date playedOn) {
         this.game = game;
         this.username = username;
-        this.points = points;
+        this.comment = comment;
         this.playedOn = playedOn;
     }
 
@@ -32,12 +32,12 @@ public class Score implements Serializable {
         this.username = username;
     }
 
-    public int getPoints() {
-        return points;
+    public String getComment() {
+        return comment;
     }
 
-    public void setPoints(int points) {
-        this.points = points;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public Date getPlayedOn() {
@@ -50,11 +50,11 @@ public class Score implements Serializable {
 
     @Override
     public String toString() {
-        return "Score{" +
-                "game = '" + game + '\'' +
-                ", username = '" + username + '\'' +
-                ", points = " + points +
-                ", playedOn = " + playedOn +
-                '}'+'\n';
+        return "Comment{" +
+                "game='" + game + '\'' +
+                ", username='" + username + '\'' +
+                ", comment='" + comment + '\'' +
+                ", playedOn=" + playedOn +
+                '}' + '\n';
     }
 }
